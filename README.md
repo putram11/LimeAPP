@@ -11,13 +11,13 @@ My Social Media App adalah sebuah aplikasi client(mobile)-server. Challenge ini 
 
 
 ### Fitur
-- [ ] Fitur Register
-- [ ] Fitur Login
-- [ ] FItur Add Post
-- [ ] Fitur Show Post (berdasarkan yang paling baru)
-- [ ] Fitur Comment Post (Embedded Document)
-- [ ] Fitur search user berdasarkan nama atau username
-- [ ] Fitur follow
-- [ ] Menampilkan Followers dan Following dari setiap user (Reference with $lookup)
-- [ ] Fitur Like Post
-- [ ] Menampilkan total like dari setiap post
+- [✅] Fitur Register
+- [✅] Fitur Login
+- [✅] FItur Add Post
+- [✅] Fitur Show Post (berdasarkan yang paling baru)
+- [✅] Fitur Comment Post (Embedded Document)
+- [✅] Fitur search user berdasarkan nama atau username
+- [✅] Fitur follow
+- [✅] Menampilkan Followers dan Following dari setiap user (Reference with $lookup)
+- [✅] Fitur Like Post
+- [✅] Menampilkan total like dari setiap post
