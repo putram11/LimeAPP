@@ -1,4 +1,3 @@
-Here's the README for your **LimeApp** project in English, styled to be engaging and informative:
 
 ---
 
