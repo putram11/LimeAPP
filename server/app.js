@@ -1,5 +1,9 @@
-if (process.env.NODE_ENV !== "production") require("dotenv").config();
+// Load environment variables if not in production
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 
+// Import necessary modules
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
 const userTypeDefs = require("./user/TypeDefs");
@@ -12,14 +16,14 @@ const { connectDB } = require("./config/mongodb");
 const { verifyToken } = require("./helpers/jsonwebtoken");
 
 async function startServer() {
-  // Koneksi ke MongoDB
+  // Connect to MongoDB
   const db = await connectDB();
 
-  // Inisialisasi Apollo Server
+  // Initialize Apollo Server
   const server = new ApolloServer({
     typeDefs: [userTypeDefs, postTypeDefs, followTypeDefs],
     resolvers: [userResolvers, postResolvers, followResolvers],
-    introspection: true,
+    introspection: true, // Enable introspection for development
   });
 
   try {
@@ -29,6 +33,7 @@ async function startServer() {
         const token = req.headers.authorization || "";
         let user = null;
 
+        // Verify token if it exists
         if (token) {
           try {
             user = verifyToken(token.replace("Bearer ", ""));
@@ -36,6 +41,8 @@ async function startServer() {
             console.error("Invalid token:", error);
           }
         }
+
+        // Return context with database and user information
         return {
           db,
           user,
@@ -49,4 +56,5 @@ async function startServer() {
   }
 }
 
+// Start the server
 startServer();
