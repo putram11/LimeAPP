@@ -1,15 +1,15 @@
 const userTypeDefs = `#graphql
   type User {
-  _id: ID!
-  name: String!
-  username: String!
-  email: String!
-  followers: [User]!
-  following: [User]!
-  userPosts: [Post]!
-  createdAt: String!
-  updatedAt: String!
-}
+    _id: ID!
+    name: String!
+    username: String!
+    email: String!
+    followers: [User]!
+    following: [User]!
+    userPosts: [Post]!
+    createdAt: String!
+    updatedAt: String!
+  }
 
   type AuthPayload {
     token: String!
