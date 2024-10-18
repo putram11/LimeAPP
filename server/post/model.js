@@ -9,9 +9,8 @@ class PostModel {
       const db = await connectDB();
       const result = await db.collection("posts").insertOne(postData);
 
-      const cacheKey = "all-posts";
-
-      await client.del(cacheKey);
+      // Clear the cache for all posts
+      await client.del("all-posts");
 
       return result;
     } catch (error) {
@@ -19,6 +18,7 @@ class PostModel {
     }
   }
 
+  // Find post by ID
   static async findById(postId) {
     try {
       const db = await connectDB();
@@ -30,9 +30,7 @@ class PostModel {
       const post = await db
         .collection("posts")
         .aggregate([
-          {
-            $match: { _id: new ObjectId(postId) },
-          },
+          { $match: { _id: new ObjectId(postId) } },
           {
             $lookup: {
               from: "users",
@@ -41,9 +39,7 @@ class PostModel {
               as: "author",
             },
           },
-          {
-            $unwind: "$author",
-          },
+          { $unwind: "$author" },
           {
             $project: {
               imgUrl: 1,
@@ -63,16 +59,17 @@ class PostModel {
       if (!post) {
         throw new Error("Post not found");
       }
+
       return post;
     } catch (error) {
       throw new Error(`Error fetching post by ID: ${error.message}`);
     }
   }
 
+  // Find all posts
   static async findAll() {
     try {
       const cacheKey = "all-posts";
-
       const cachedPosts = await client.get(cacheKey);
 
       if (cachedPosts) {
@@ -91,9 +88,7 @@ class PostModel {
               as: "author",
             },
           },
-          {
-            $unwind: "$author",
-          },
+          { $unwind: "$author" },
           {
             $project: {
               imgUrl: 1,
@@ -108,6 +103,7 @@ class PostModel {
         ])
         .toArray();
 
+      // Cache the posts
       await client.set(cacheKey, JSON.stringify(posts));
 
       return posts;
@@ -116,30 +112,42 @@ class PostModel {
     }
   }
 
+  // Add a comment to a post
   static async addComment(postId, comment) {
-    const db = await connectDB();
-    const updatedPost = await db.collection("posts").findOneAndUpdate(
-      { _id: new ObjectId(postId) },
-      {
-        $push: { comments: comment },
-        $set: { updatedAt: new Date().toISOString() },
-      },
-      { returnOriginal: false }
-    );
-    return updatedPost.value;
+    try {
+      const db = await connectDB();
+      const updatedPost = await db.collection("posts").findOneAndUpdate(
+        { _id: new ObjectId(postId) },
+        {
+          $push: { comments: comment },
+          $set: { updatedAt: new Date().toISOString() },
+        },
+        { returnOriginal: false }
+      );
+
+      return updatedPost.value;
+    } catch (error) {
+      throw new Error(`Error adding comment: ${error.message}`);
+    }
   }
 
+  // Add a like to a post
   static async addLike(postId, like) {
-    const db = await connectDB();
-    const updatedPost = await db.collection("posts").findOneAndUpdate(
-      { _id: new ObjectId(postId) },
-      {
-        $push: { likes: like },
-        $set: { updatedAt: new Date().toISOString() },
-      },
-      { returnOriginal: false }
-    );
-    return updatedPost.value;
+    try {
+      const db = await connectDB();
+      const updatedPost = await db.collection("posts").findOneAndUpdate(
+        { _id: new ObjectId(postId) },
+        {
+          $push: { likes: like },
+          $set: { updatedAt: new Date().toISOString() },
+        },
+        { returnOriginal: false }
+      );
+
+      return updatedPost.value;
+    } catch (error) {
+      throw new Error(`Error adding like: ${error.message}`);
+    }
   }
 }
 
