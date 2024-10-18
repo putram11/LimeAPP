@@ -10,20 +10,28 @@ const client = new MongoClient(uri, {
   },
 });
 
+/**
+ * Connect to MongoDB and return the database instance.
+ * 
+ * @returns {Object} - The connected MongoDB database instance.
+ * @throws {Error} - Throws an error if unable to connect to MongoDB.
+ */
 async function connectDB() {
   try {
-    // Connect to the MongoDB cluster
+    // Attempt to connect to MongoDB
     await client.connect();
 
-    // Select the database
+    // Specify the database to use
     const database = client.db("project1");
 
-    console.log("Connected successfully to MongoDB");
+    console.log("Successfully connected to MongoDB");
 
-    return database;
+    return database; // Return the database instance for further operations
   } catch (err) {
-    console.error("Failed to connect to MongoDB", err);
-    throw err;
+    console.error("Error connecting to MongoDB:", err.message);
+
+    // Throw error to be handled by caller
+    throw new Error("Failed to connect to MongoDB");
   }
 }
 
